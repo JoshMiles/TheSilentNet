@@ -10,11 +10,14 @@ namespace TheSilentNet
     {
         public Client()
         {
-            connectNetwork();
+            checkFirstTime(); // see summary of function
         }
-        void connectNetwork()
+        /// <summary>
+        /// A check to see if the client has an established cIP database, if no then a connection to a TLN is needed.
+        /// </summary>
+        void checkFirstTime()
         {
-            // bitch better have my money 
+           
         }
     }
 }
