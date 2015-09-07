@@ -1,0 +1,24 @@
+c:\users\joshua\documents\visual studio 2013\Projects\TheSilentNet\ProjectPaper\bin\Debug\ProjectPaper.exe.config
+c:\users\joshua\documents\visual studio 2013\Projects\TheSilentNet\ProjectPaper\bin\Debug\ProjectPaper.exe
+c:\users\joshua\documents\visual studio 2013\Projects\TheSilentNet\ProjectPaper\bin\Debug\ProjectPaper.pdb
+c:\users\joshua\documents\visual studio 2013\Projects\TheSilentNet\ProjectPaper\bin\Debug\TheSilentNet.dll
+c:\users\joshua\documents\visual studio 2013\Projects\TheSilentNet\ProjectPaper\bin\Debug\TheSilentNet.pdb
+c:\users\joshua\documents\visual studio 2013\Projects\TheSilentNet\ProjectPaper\obj\Debug\ProjectPaper.csprojResolveAssemblyReference.cache
+c:\users\joshua\documents\visual studio 2013\Projects\TheSilentNet\ProjectPaper\obj\Debug\ProjectPaper.Form1.resources
+c:\users\joshua\documents\visual studio 2013\Projects\TheSilentNet\ProjectPaper\obj\Debug\ProjectPaper.Properties.Resources.resources
+c:\users\joshua\documents\visual studio 2013\Projects\TheSilentNet\ProjectPaper\obj\Debug\ProjectPaper.csproj.GenerateResource.Cache
+c:\users\joshua\documents\visual studio 2013\Projects\TheSilentNet\ProjectPaper\obj\Debug\ProjectPaper.exe
+c:\users\joshua\documents\visual studio 2013\Projects\TheSilentNet\ProjectPaper\obj\Debug\ProjectPaper.pdb
+C:\Users\Joshua\Documents\GitHub\TheSilentNet\src\TheSilentNet\ProjectPaper\bin\Debug\ProjectPaper.exe.config
+C:\Users\Joshua\Documents\GitHub\TheSilentNet\src\TheSilentNet\ProjectPaper\obj\Debug\ProjectPaper.exe
+C:\Users\Joshua\Documents\GitHub\TheSilentNet\src\TheSilentNet\ProjectPaper\obj\Debug\ProjectPaper.pdb
+C:\Users\Joshua\Documents\GitHub\TheSilentNet\unstable\ProjectPaper\ProjectPaper.exe.config
+C:\Users\Joshua\Documents\unstable\ProjectPaper\ProjectPaper.exe.config
+C:\Users\Joshua\Documents\unstable\ProjectPaper\ProjectPaper.exe
+C:\Users\Joshua\Documents\unstable\ProjectPaper\ProjectPaper.pdb
+C:\Users\Joshua\Documents\GitHub\TheSilentNet\src\TheSilentNet\ProjectPaper\obj\Debug\ProjectPaper.csprojResolveAssemblyReference.cache
+C:\Users\Joshua\Documents\GitHub\TheSilentNet\src\TheSilentNet\ProjectPaper\obj\Debug\ProjectPaper.Form1.resources
+C:\Users\Joshua\Documents\GitHub\TheSilentNet\src\TheSilentNet\ProjectPaper\obj\Debug\ProjectPaper.Properties.Resources.resources
+C:\Users\Joshua\Documents\GitHub\TheSilentNet\src\TheSilentNet\ProjectPaper\obj\Debug\ProjectPaper.csproj.GenerateResource.Cache
+C:\Users\Joshua\Documents\GitHub\TheSilentNet\unstable\ProjectPaper\ProjectPaper.exe
+C:\Users\Joshua\Documents\GitHub\TheSilentNet\unstable\ProjectPaper\ProjectPaper.pdb

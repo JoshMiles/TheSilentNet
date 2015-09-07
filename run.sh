@@ -1,1 +1,1 @@
-mono thesilentnet.exe
+mono unstable/ProjectPaper/ProjectPaper.exe
