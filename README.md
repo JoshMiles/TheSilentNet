@@ -1,4 +1,5 @@
 # TheSilentNet
-The sNet (V: 3)
+The Third sNet
 
-# omg
+
+Please see the [website] (http://www.thesilentnet.com)
