@@ -99,7 +99,7 @@ namespace TheSilentNet
 		/// <param name="query">Query.</param>
 		/// <param name="cols">Columns.</param>
 		public static string Values (this string query, params object[] cols) {
-			return string.Format ("{0} ({1})", query, cols
+			return string.Format ("{0} VALUES ({1})", query, cols
 				.Select (c => c.ToString ()).Aggregate (aggrstr));
 		}
 

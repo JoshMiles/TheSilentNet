@@ -24,11 +24,6 @@ namespace TheSilentNet
 		/// Describes a top-level node.
 		/// </summary>
 		TopLevelNode = 1 << 3,
-
-		/// <summary>
-		/// Describes a client.
-		/// </summary>
-		ClientNode = AccessNode | BottomNode,
 	}
 }
 

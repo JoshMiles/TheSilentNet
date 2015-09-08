@@ -30,12 +30,6 @@ namespace TheSilentNet
 		public bool IsBottomNode { get { return Type.HasFlag (CipNodeType.BottomNode); } }
 
 		/// <summary>
-		/// Gets a value indicating whether this instance is a client node.
-		/// </summary>
-		/// <value><c>true</c> if this instance is a client node; otherwise, <c>false</c>.</value>
-		public bool IsClientNode { get { return Type.HasFlag (CipNodeType.ClientNode); } }
-
-		/// <summary>
 		/// Gets a value indicating whether this instance is a top level node.
 		/// </summary>
 		/// <value><c>true</c> if this instance is a top level node; otherwise, <c>false</c>.</value>
@@ -57,6 +51,14 @@ namespace TheSilentNet
 		/// <param name="cip">cIP.</param>
 		/// <param name="rawtype">Raw Type.</param>
 		public CipEntry (string cip, int rawtype) : this (cip, (CipNodeType)rawtype) {
+		}
+
+		/// <summary>
+		/// Returns a <see cref="System.String"/> that represents the current <see cref="TheSilentNet.CipEntry"/>.
+		/// </summary>
+		/// <returns>A <see cref="System.String"/> that represents the current <see cref="TheSilentNet.CipEntry"/>.</returns>
+		public override string ToString () {
+			return string.Format ("[cIPNode: Accept={0}, Bottom={1}, TLN={2}, Value={3}]", IsAcceptNode, IsBottomNode, IsTopLevelNode, Value);
 		}
 	}
 }

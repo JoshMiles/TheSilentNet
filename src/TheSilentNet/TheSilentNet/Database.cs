@@ -83,7 +83,7 @@ namespace TheSilentNet
 		/// Initializes a new instance of the <see cref="TheSilentNet.Database"/> class.
 		/// </summary>
 		public Database () {
-
+			
 			// Make sure that nobody directly instantiates this class.
 			// It must be instantiated from within the Instance () method.
 			Guard ();
@@ -120,6 +120,52 @@ namespace TheSilentNet
 		}
 
 		/// <summary>
+		/// Begins a transaction.
+		/// </summary>
+		public void BeginTransaction () {
+			ExecNonQuery ("BEGIN");
+		}
+
+		/// <summary>
+		/// Wraps a function call into a transaction.
+		/// </summary>
+		/// <param name="act">Action.</param>
+		public void WrapTransaction (Action act) {
+			BeginTransaction ();
+			act ();
+			EndTransaction ();
+		}
+
+		/// <summary>
+		/// Wraps a function call into a fast transaction.
+		/// Possibly unsafe. Don't use this in production.
+		/// </summary>
+		/// <param name="act">Act.</param>
+		public void WrapFast (Action act) {
+			ExecNonQuery ("PRAGMA synchronous = OFF; PRAGMA journal_mode = WAL;");
+			BeginTransaction ();
+			act ();
+			EndTransaction ();
+			ExecNonQuery ("PRAGMA synchronous = ON; PRAGMA journal_mode = DELETE;");
+		}
+
+		/// <summary>
+		/// Ends a transaction.
+		/// </summary>
+		public void EndTransaction () {
+			ExecNonQuery ("END");
+		}
+
+		/// <summary>
+		/// Recreates the database.
+		/// WARNING: Wipes all data!
+		/// </summary>
+		public bool Recreatedb () {
+			ExecNonQuery ("DROP TABLE cips; DROP TABLE domains;");
+			return ExecNonQuery (TABLE_LAYOUT) > 0;
+		}
+
+		/// <summary>
 		/// Gets a maximum of <paramref name="max"/> nodes from the 'cips' table.
 		/// </summary>
 		/// <returns>The nodes.</returns>
@@ -130,7 +176,7 @@ namespace TheSilentNet
 			using (var reader = ExecReader ((tln ? QUERY_SELECT_TLN : QUERY_SELECT_CLN).Limit (max))) {
 				if (reader.HasRows)
 					while (reader.Read ())
-						nodes.Add (new CipEntry ((string)reader ["cip"], (int)reader ["type"]));
+						nodes.Add (new CipEntry (reader.GetString (0), reader.GetByte (1)));
 			}
 			return nodes;
 		}
@@ -150,6 +196,9 @@ namespace TheSilentNet
 		/// <returns>The command.</returns>
 		/// <param name="query">Query.</param>
 		/// <param name="args">Arguments.</param>
+		#if DEBUG
+		public
+		#endif
 		SQLiteCommand CreateCommand (string query, params KeyValuePair<string, object>[] args) {
 			var com = con.CreateCommand ();
 			com.CommandText = query;
@@ -165,6 +214,9 @@ namespace TheSilentNet
 		/// <returns>The number of rows inserted/updated affected by the query.</returns>
 		/// <param name="query">Query.</param>
 		/// <param name="args">Arguments.</param>
+		#if DEBUG
+		public
+		#endif
 		int ExecNonQuery (string query, params KeyValuePair<string, object>[] args) {
 			return CreateCommand (query, args).ExecuteNonQuery ();
 		}
@@ -175,6 +227,9 @@ namespace TheSilentNet
 		/// <returns>The first column of the resultset (if present), null otherwise.</returns>
 		/// <param name="query">Query.</param>
 		/// <param name="args">Arguments.</param>
+		#if DEBUG
+		public
+		#endif
 		object ExecScalar (string query, params KeyValuePair<string, object>[] args) {
 			return CreateCommand (query, args).ExecuteScalar ();
 		}
@@ -185,6 +240,9 @@ namespace TheSilentNet
 		/// <returns>An SQLiteDataReader that can be used to access the resultset.</returns>
 		/// <param name="query">Query.</param>
 		/// <param name="args">Arguments.</param>
+		#if DEBUG
+		public
+		#endif
 		SQLiteDataReader ExecReader (string query, params KeyValuePair<string, object>[] args) {
 			return CreateCommand (query, args).ExecuteReader ();
 		}

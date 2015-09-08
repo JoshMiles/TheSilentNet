@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace TheSilentNet
@@ -6,39 +7,34 @@ namespace TheSilentNet
 	/// <summary>
 	/// Singleton.
 	/// </summary>
-	public abstract class Singleton<T> where T : new() {
-		
-		/// <summary>
-		/// The sync root.
-		/// </summary>
-		[SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes")]
-		static readonly object syncRoot = new object ();
+	public static class Singleton {
+		public readonly static Dictionary<Type, object> Lookup = new Dictionary<Type, object> ();
+		public static readonly object SyncRoot = new object ();
+	}
 
-		/// <summary>
-		/// The instance.
-		/// </summary>
-		[SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes")]
-		protected static T instance;
+	/// <summary>
+	/// Singleton.
+	/// </summary>
+	public abstract class Singleton<T> where T : class, new() {
 
 		/// <summary>
 		/// Lazily creates and returns the instance.
 		/// </summary>
 		public static T Instance () {
-			// Analysis disable CompareNonConstrainedGenericWithNull
-			if (instance == null)
-				lock (syncRoot)
-					if (instance == null)
-						instance = new T ();
-			// Analysis restore CompareNonConstrainedGenericWithNull
-			return instance;
+			if (!Singleton.Lookup.ContainsKey (typeof(T)))
+				lock (Singleton.SyncRoot)
+					if (!Singleton.Lookup.ContainsKey (typeof(T))) {
+						Singleton.Lookup.Add (typeof(T), null);
+						Singleton.Lookup [typeof(T)] = new T ();
+					}
+			return (T)Singleton.Lookup[typeof (T)];
 		}
 
 		/// <summary>
 		/// Protects the constructor from being called directly.
 		/// </summary>
 		public static void Guard () {
-			// Analysis disable once CompareNonConstrainedGenericWithNull
-			if (instance != null)
+			if (!Singleton.Lookup.ContainsKey (typeof (T)))
 				throw new Exception ("You must instantiate this class using the Instance () method.");
 		}
 	}
