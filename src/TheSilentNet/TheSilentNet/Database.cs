@@ -29,6 +29,8 @@ namespace TheSilentNet
 		readonly SQLiteConnection con;
 
 		public Database () {
+			if (instance != null)
+				throw new Exception ("You must instantiate this class using the Instance () method.");
 			con = new SQLiteConnection {
 				ConnectionString = string.Format ("Data Source={0}", DATA_SOURCE)
 			}.OpenAndReturn ();

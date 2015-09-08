@@ -7,7 +7,7 @@ namespace TheSilentNet
 		[SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes")]
 		static readonly object syncRoot = new object ();
 		[SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes")]
-		static T instance;
+		protected static T instance;
 		public static T Instance () {
 			// Analysis disable CompareNonConstrainedGenericWithNull
 			if (instance == null)
