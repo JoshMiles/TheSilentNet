@@ -8,8 +8,14 @@ namespace TheSilentNet
 {
     public class Client
     {
-        public Client()
+        Database db = Database.Instance();
+        char NODE_TYPE = 'a'; // set to 'a' by default
+
+        public Client(char NODE_TYPE)
         {
+            // Client Settings
+            this.NODE_TYPE = NODE_TYPE;
+
             checkFirstTime(); // see summary of function
         }
         /// <summary>
@@ -17,7 +23,14 @@ namespace TheSilentNet
         /// </summary>
         void checkFirstTime()
         {
-           
+            IEnumerable<CipEntry> NODES = db.GetNodes(1024, true);
+            
+            if(NODES.Count<CipEntry>() == 0)
+            {
+                // There are no registered nodes in the cIPc
+                // Therefore, we must assign the client to a TLN
+                
+            }
         }
     }
 }

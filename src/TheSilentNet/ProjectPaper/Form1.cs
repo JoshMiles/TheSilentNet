@@ -13,7 +13,7 @@ namespace ProjectPaper
 {
     public partial class Form1 : Form
     {
-        Client client = new Client();
+        Client client = new Client('a');
         public Form1()
         {
             InitializeComponent();
@@ -25,6 +25,11 @@ namespace ProjectPaper
         }
 
         private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
         {
 
         }
