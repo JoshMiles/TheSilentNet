@@ -21,20 +21,41 @@ namespace TheSilentNet
 			"FOREIGN KEY(cip) REFERENCES cips(cip)" +
 			");";
 
-		readonly string QUERY_SELECT_TLN = Instance ().Select ("cip").From ("cips").Where ("tln").Eq (1).Limit (1024);
-		readonly string QUERY_SELECT_KNOWN_SN = Instance ().Select ("cip").From ("cips").Where ("tln").Eq (0).Limit (1024);
+		readonly string QUERY_SELECT_TLN = Instance ().Select ("cip").From ("cips").Where ("tln").Eq (1);
+		readonly string QUERY_SELECT_KNOWN_SN = Instance ().Select ("cip").From ("cips").Where ("tln").Eq (0);
 		readonly string QUERY_INSERT_TLN = Instance ().Into ("cip").Insert ("cip", "tln").Values ("@cip", 1);
 		readonly string QUERY_INSERT_SN = Instance ().Into ("cip").Insert ("cip").Values ("@cip");
 
 		readonly SQLiteConnection con;
 
 		public Database () {
-			if (instance != null)
-				throw new Exception ("You must instantiate this class using the Instance () method.");
+			Guard ();
 			con = new SQLiteConnection {
 				ConnectionString = string.Format ("Data Source={0}", DATA_SOURCE)
 			}.OpenAndReturn ();
 			ExecNonQuery (TABLE_LAYOUT);
+		}
+
+		public bool AddNode (string cip, bool tln = false) {
+			return ExecNonQuery (tln ? QUERY_INSERT_TLN : QUERY_INSERT_SN, cip.ToSQLiteParam ("@cip")) > 0;
+		}
+
+		public bool AddTopLevelNode (string cip) {
+			return AddNode (cip: cip, tln: true);
+		}
+
+		public IEnumerable<CipEntry> GetNodes (int max = 1024, bool tln = false) {
+			var nodes = new List<CipEntry> ();
+			using (var reader = ExecReader ((tln ? QUERY_SELECT_TLN : QUERY_SELECT_KNOWN_SN).Limit (max))) {
+				if (reader.HasRows)
+					while (reader.Read ())
+						nodes.Add (new CipEntry ((string)reader ["cip"], (int)reader ["tln"] == 1));
+			}
+			return nodes;
+		}
+
+		public IEnumerable<CipEntry> GetTopLevelNodes (int max = 1024) {
+			return GetNodes (max: 1024, tln: true);
 		}
 
 		SQLiteCommand CreateCommand (string query, params KeyValuePair<string, object>[] args) {
@@ -46,8 +67,8 @@ namespace TheSilentNet
 			return com;
 		}
 
-		void ExecNonQuery (string query, params KeyValuePair<string, object>[] args) {
-			CreateCommand (query, args).ExecuteNonQuery ();
+		int ExecNonQuery (string query, params KeyValuePair<string, object>[] args) {
+			return CreateCommand (query, args).ExecuteNonQuery ();
 		}
 
 		object ExecScalar (string query, params KeyValuePair<string, object>[] args) {

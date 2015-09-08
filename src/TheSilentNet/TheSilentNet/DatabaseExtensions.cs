@@ -53,6 +53,10 @@ namespace TheSilentNet
 				string.Format ("{0} LIMIT {1}", query, limit) :
 				string.Format ("{0} LIMIT {1},{2}", query, limit, limit2);
 		}
+
+		public static KeyValuePair<string, object> ToSQLiteParam (this object value, string key) {
+			return new KeyValuePair<string, object> (key, value);
+		}
 	}
 }
 

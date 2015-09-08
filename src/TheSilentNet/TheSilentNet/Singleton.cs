@@ -17,6 +17,11 @@ namespace TheSilentNet
 			// Analysis restore CompareNonConstrainedGenericWithNull
 			return instance;
 		}
+		public static void Guard () {
+			// Analysis disable once CompareNonConstrainedGenericWithNull
+			if (instance != null)
+				throw new Exception ("You must instantiate this class using the Instance () method.");
+		}
 	}
 }
 
