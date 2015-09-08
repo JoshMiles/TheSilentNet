@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2013 for Windows Desktop
+# Visual Studio 2012
 VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSilentNet", "TheSilentNet\TheSilentNet.csproj", "{F366BBA8-5326-41F7-ABED-BC64316C9295}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectPaper", "ProjectPaper\ProjectPaper.csproj", "{FD5FD6C1-42FF-4FE6-B280-DA61C979D601}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "snetSN", "snetSN\snetSN.csproj", "{31977F16-6518-42D5-8C9C-4560F58AF32D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "snetTLN", "snetTLN\snetTLN.csproj", "{11FAB167-0891-4488-90E4-93638432E5BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +17,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{11FAB167-0891-4488-90E4-93638432E5BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11FAB167-0891-4488-90E4-93638432E5BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11FAB167-0891-4488-90E4-93638432E5BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11FAB167-0891-4488-90E4-93638432E5BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31977F16-6518-42D5-8C9C-4560F58AF32D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31977F16-6518-42D5-8C9C-4560F58AF32D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31977F16-6518-42D5-8C9C-4560F58AF32D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31977F16-6518-42D5-8C9C-4560F58AF32D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F366BBA8-5326-41F7-ABED-BC64316C9295}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F366BBA8-5326-41F7-ABED-BC64316C9295}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F366BBA8-5326-41F7-ABED-BC64316C9295}.Release|Any CPU.ActiveCfg = Release|Any CPU
