@@ -23,24 +23,33 @@ namespace TheSilentNet
 			
 			// Enable foreign key support.
 			"PRAGMA foreign_keys = ON;" +
+
 			// Create the table 'cips' only if it doesn't yet exist.
 			"CREATE TABLE IF NOT EXISTS cips (" +
+
 			// The cIP must not be null and is unique.
 			// The query must fail on collision.
 			"cip VARCHAR(512) NOT NULL UNIQUE ON CONFLICT FAIL," +
-			// The TLN blob indicates whether a node is a TLN.
-			"tln BLOB(1) DEFAULT 0" +
+
+			// The type of the node.
+			// Defaults to AcceptNode (2 ^ 1).
+			"type TINYINT DEFAULT (1 << 1)" +
 			");" +
+
 			// Create the table 'domains' only if it doesn't yet exist.
 			"CREATE TABLE IF NOT EXISTS domains (" +
+
 			// This column is a reference to the column of same name
 			// in the 'cips' table (defined above).
 			"cip VARCHAR(512) NOT NULL UNIQUE ON CONFLICT FAIL," +
+
 			// The name of the domain must not be null and is unique.
 			// The query must fail on collision.
 			"name VARCHAR(64) NOT NULL UNIQUE ON CONFLICT FAIL," +
+
 			// The port of the host defaults to 80.
 			"port INT DEFAULT 80," +
+
 			// Make the 'cip' field reference the 'cip' field
 			// in the 'cips' table (defined above).
 			"FOREIGN KEY(cip) REFERENCES cips(cip)" +
@@ -51,22 +60,17 @@ namespace TheSilentNet
 		/// <summary>
 		/// Selects the cIPs of all TLNs from the 'cips' table.
 		/// </summary>
-		readonly string QUERY_SELECT_TLN = Instance ().Select ("cip").From ("cips").Where ("tln").Eq (1);
+		readonly string QUERY_SELECT_TLN = Instance ().Select ("*").From ("cips").Where ("type").Eq ((int)CipNodeType.TopLevelNode);
 
 		/// <summary>
-		/// Selects the cIPs of all nodes (excluding TLNs) from the 'cips' table.
+		/// Selects the cIPs of all client nodes (excluding TLNs) from the 'cips' table.
 		/// </summary>
-		readonly string QUERY_SELECT_KNOWN_SN = Instance ().Select ("cip").From ("cips").Where ("tln").Eq (0);
+		readonly string QUERY_SELECT_CLN = Instance ().Select ("*").From ("cips").Where ("type").Neq ((int)CipNodeType.TopLevelNode);
 
 		/// <summary>
-		/// Inserts the cIP of a TLN into the 'cips' table.
+		/// Inserts a cIP into the 'cips' table.
 		/// </summary>
-		readonly string QUERY_INSERT_TLN = Instance ().Into ("cips").Insert ("cip", "tln").Values ("@cip", 1);
-
-		/// <summary>
-		/// Inserts the cIP of a non-TLN into the 'cips' table.
-		/// </summary>
-		readonly string QUERY_INSERT_SN = Instance ().Into ("cips").Insert ("cip").Values ("@cip");
+		readonly string QUERY_INSERT_NODE = Instance ().Into ("cips").Insert ("cip", "type").Values ("@cip", "@type");
 
 		#endregion
 
@@ -99,18 +103,20 @@ namespace TheSilentNet
 		/// </summary>
 		/// <returns><c>true</c>, if the node was added, <c>false</c> otherwise.</returns>
 		/// <param name="cip">cIP.</param>
-		/// <param name="tln">Whether this node is a TLN.</param>
-		public bool AddNode (string cip, bool tln = false) {
-			return ExecNonQuery (tln ? QUERY_INSERT_TLN : QUERY_INSERT_SN, cip.ToSQLiteParam ("@cip")) > 0;
+		/// <param name="type">Type.</param>
+		public bool AddNode (string cip, CipNodeType type) {
+			return ExecNonQuery (QUERY_INSERT_NODE,
+				cip.ToSQLiteParam ("@cip"),
+				((int)type).ToSQLiteParam ("@type")) > 0;
 		}
 
 		/// <summary>
-		/// Adds a TLN to the 'cips' table.
+		/// Adds a node to the 'cips' table.
 		/// </summary>
-		/// <returns><c>true</c>, if the TLN was added, <c>false</c> otherwise.</returns>
-		/// <param name="cip">cIP.</param>
-		public bool AddTopLevelNode (string cip) {
-			return AddNode (cip: cip, tln: true);
+		/// <returns><c>true</c>, if the node was added, <c>false</c> otherwise.</returns>
+		/// <param name="cip">cIP entry.</param>
+		public bool AddNode (CipEntry cip) {
+			return AddNode (cip.Value, cip.Type);
 		}
 
 		/// <summary>
@@ -121,10 +127,10 @@ namespace TheSilentNet
 		/// <param name="tln">Whether only TLNs should be returned.</param>
 		public IEnumerable<CipEntry> GetNodes (int max = 1024, bool tln = false) {
 			var nodes = new List<CipEntry> ();
-			using (var reader = ExecReader ((tln ? QUERY_SELECT_TLN : QUERY_SELECT_KNOWN_SN).Limit (max))) {
+			using (var reader = ExecReader ((tln ? QUERY_SELECT_TLN : QUERY_SELECT_CLN).Limit (max))) {
 				if (reader.HasRows)
 					while (reader.Read ())
-						nodes.Add (new CipEntry ((string)reader ["cip"], (int)reader ["tln"] == 1));
+						nodes.Add (new CipEntry ((string)reader ["cip"], (int)reader ["type"]));
 			}
 			return nodes;
 		}

@@ -22,14 +22,16 @@ namespace TheSilentNet
 		/// A lookup table containing the string equivalent of a specific <see cref="WhereComparison"/>. 
 		/// </summary>
 		readonly static Dictionary<WhereComparison, string> oplookup = new Dictionary<WhereComparison, string> {
-			{ WhereComparison.Equals, "==" }
+			{ WhereComparison.Equals, "==" },
+			{ WhereComparison.NotEquals, "!=" },
 		};
 
 		/// <summary>
 		/// A comparison used in a WHERE statement.
 		/// </summary>
 		public enum WhereComparison {
-			Equals = 1 << 1,
+			Equals,
+			NotEquals,
 		}
 
 		/// <summary>
@@ -102,15 +104,6 @@ namespace TheSilentNet
 		}
 
 		/// <summary>
-		/// Checks if the last operand in the query string equals the specified operand.
-		/// </summary>
-		/// <param name="query">Query.</param>
-		/// <param name="op">Operand.</param>
-		public static string Eq (this string query, object op) {
-			return string.Format ("{0} == {1}", query, op);
-		}
-
-		/// <summary>
 		/// LIMIT statement.
 		/// </summary>
 		/// <param name="query">Query.</param>
@@ -120,6 +113,40 @@ namespace TheSilentNet
 			return limit2 == -1 ?
 				string.Format ("{0} LIMIT {1}", query, limit) :
 				string.Format ("{0} LIMIT {1},{2}", query, limit, limit2);
+		}
+
+		/// <summary>
+		/// Checks if the last operand in the query string equals the specified operand.
+		/// </summary>
+		/// <param name="query">Query.</param>
+		/// <param name="op">Operand.</param>
+		public static string Eq (this string query, object op) {
+			return string.Format ("{0} == {1}", query, op);
+		}
+
+		/// <summary>
+		/// Checks if the last operand in the query string doesn't equal the specified operand.
+		/// </summary>
+		/// <param name="query">Query.</param>
+		/// <param name="op">Operand.</param>
+		public static string Neq (this string query, object op) {
+			return string.Format ("{0} != {1}", query, op);
+		}
+
+		/// <summary>
+		/// AND statement.
+		/// </summary>
+		/// <param name="query">Query.</param>
+		public static string And (this string query) {
+			return string.Format ("{0} AND", query);
+		}
+
+		/// <summary>
+		/// OR statement.
+		/// </summary>
+		/// <param name="query">Query.</param>
+		public static string Or (this string query) {
+			return string.Format ("{0} OR", query);
 		}
 
 		/// <summary>
