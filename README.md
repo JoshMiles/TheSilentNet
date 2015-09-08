@@ -1,8 +1,5 @@
-# TheSilentNet
-The Third sNet
+# The Silent Network.
 
+Please see the [wiki] (https://github.com/JoshMiles/TheSilentNet/wiki/) for information.
 
-Please see the [website] (http://www.thesilentnet.com)
-
-# How To Download and Use
-
+See the [website] (http://www.thesilentnet.com/) for downloading.
