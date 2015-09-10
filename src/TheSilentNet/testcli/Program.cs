@@ -21,8 +21,8 @@ namespace testcli
 				for (var i = 0; i < 1024; i++)
 					db.AddNode (new CipEntry (Guid.NewGuid ().ToString (), CipNodeType.TopLevelNode));
 				
-				// Create 1024 ^ 2 a nodes
-				for (var i = 0; i < 1024 * 1024; i++)
+				// Create 4096 a nodes
+				for (var i = 0; i < 4096; i++)
 					db.AddNode (new CipEntry (Guid.NewGuid ().ToString (), CipNodeType.AccessNode));
 			});
 
@@ -30,7 +30,7 @@ namespace testcli
 
 			// Get all results
 			db.WrapFast (() => {
-				var query = db.Select ("*").From ("cips");
+				var query = Query.GrabNew ().Select ("*").From ("cips");
 				var nodes = new List<CipEntry> ();
 				using (var reader = db.ExecReader (query)) {
 					if (reader.HasRows)

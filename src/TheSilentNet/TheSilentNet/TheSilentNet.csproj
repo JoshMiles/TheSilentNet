@@ -56,13 +56,16 @@
   <ItemGroup>
     <Compile Include="cIP.cs" />
     <Compile Include="Client.cs" />
+    <Compile Include="Database\DatabaseLayout.cs" />
+    <Compile Include="Database\SqliteNameReference.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Chainable.cs" />
-    <Compile Include="Database.cs" />
+    <Compile Include="Database\Database.cs" />
+    <Compile Include="Database\Query.cs" />
     <Compile Include="Singleton.cs" />
-    <Compile Include="DatabaseExtensions.cs" />
     <Compile Include="CipEntry.cs" />
     <Compile Include="CipNodeType.cs" />
+    <Compile Include="Database\SqliteExtensions.cs" />
     <Compile Include="TLN\TLNServer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

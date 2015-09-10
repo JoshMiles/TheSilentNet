@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.IO;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using TheSilentNet;
@@ -10,32 +11,29 @@ namespace TheSilentNet.TLN
 {
     public class AsynchIOServer
     {
-        TcpListener tcpListener = new TcpListener(1998);
+        readonly TcpListener tcpListener = new TcpListener(new IPEndPoint (IPAddress.Any, 1998));
         
         void Listeners()
         {
             Database cIpc = Database.Instance();
-            Socket socketForClient = tcpListener.AcceptSocket();
-            if (socketForClient.Connected)
-            {
-                Console.WriteLine("Sub-node:" + socketForClient.RemoteEndPoint + " now connected to server.");
-                NetworkStream networkStream = new NetworkStream(socketForClient);
-                System.IO.StreamWriter streamWriter =
-                new System.IO.StreamWriter(networkStream);
-                System.IO.StreamReader streamReader =
-                new System.IO.StreamReader(networkStream);
+            Socket sock = tcpListener.AcceptSocket();
+            if (sock.Connected) {
+                Console.WriteLine ("SubNode {0} now connected to server.", sock.RemoteEndPoint);
+                var networkStream = new NetworkStream (sock);
+                var writer = new StreamWriter (networkStream);
+                var reader = new StreamReader (networkStream);
 
                 while (true)
                 {
-                    int request = Int32.Parse(streamReader.ReadLine());
+                    int request = Int32.Parse(reader.ReadLine());
                     Console.WriteLine("[SN]:" + request);
                     switch (request)
                     {
                         case 0:
                             // Register as a sub-node with the HLN
-                            streamWriter.WriteLine(1); // request valid, send data.
-                            streamWriter.Flush();
-                            string subnode_type = streamReader.ReadLine();
+                            writer.WriteLine(1); // request valid, send data.
+                            writer.Flush();
+                            string subnode_type = reader.ReadLine();
                             CipNodeType nodetype = CipNodeType.AccessNode;
                             switch(subnode_type)
                             {
@@ -46,24 +44,24 @@ namespace TheSilentNet.TLN
                                     nodetype = CipNodeType.AccessNode;
                                     break;
                             }
-                            CipEntry subnode = new CipEntry(cIP.generatecIP(socketForClient.RemoteEndPoint), nodetype);
+                            CipEntry subnode = new CipEntry(cIP.generatecIP(sock.RemoteEndPoint), nodetype);
                             cIpc.AddNode(subnode);
-                            streamWriter.WriteLine(1); // exchange over
-                            streamWriter.Flush();
+                            writer.WriteLine(1); // exchange over
+                            writer.Flush();
                             break;
                         default:
-                            streamWriter.WriteLine(0); // 0 is an error code, telling the client that the request is invalid.
-                            streamWriter.Flush();
+                            writer.WriteLine(0); // 0 is an error code, telling the client that the request is invalid.
+                            writer.Flush();
                             break;
                     }
                 }
-                streamReader.Close();
+                reader.Close();
                 networkStream.Close();
-                streamWriter.Close();
+                writer.Close();
                 
 
             }
-            socketForClient.Close();
+            sock.Close();
             Console.WriteLine("Press any key to exit from server program");
             Console.ReadKey();
         }

@@ -13,7 +13,7 @@ namespace ProjectPaper
 {
     public partial class Form1 : Form
     {
-        Client client = new Client('a');
+        Client client = Client.GrabNew ();
         public Form1()
         {
             InitializeComponent();

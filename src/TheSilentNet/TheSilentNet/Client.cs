@@ -6,30 +6,27 @@ using System.Threading.Tasks;
 
 namespace TheSilentNet
 {
-    public class Client
+	public class Client : Chainable<Client>
     {
-        Database db = Database.Instance();
-        char NODE_TYPE = 'a'; // set to 'a' by default
+        readonly Database db = Database.Instance ();
+		readonly CipEntry self;
 
-        public Client(char NODE_TYPE)
-        {
-            // Client Settings
-            this.NODE_TYPE = NODE_TYPE;
+		public Client () : this (CipNodeType.AccessNode) { }
 
-            checkFirstTime(); // see summary of function
-        }
+		public Client (CipNodeType nodeType) {
+			self = new CipEntry ("", nodeType);
+			checkFirstTime ();
+		}
+
         /// <summary>
         /// A check to see if the client has an established cIP database, if no then a connection to a TLN is needed.
         /// </summary>
-        void checkFirstTime()
-        {
-            IEnumerable<CipEntry> NODES = db.GetNodes(1024, true);
+        void checkFirstTime () {
+			var tlns = db.GetTopLevelNodes (1024);
             
-            if(NODES.Count<CipEntry>() == 0)
-            {
+			if (tlns.Any ()) {
                 // There are no registered nodes in the cIPc
                 // Therefore, we must assign the client to a TLN
-                
             }
         }
     }

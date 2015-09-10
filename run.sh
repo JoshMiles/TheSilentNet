@@ -1,1 +1,1 @@
-mono unstable/ProjectPaper/ProjectPaper.exe
+mono bin/ProjectPaper.exe
