@@ -145,9 +145,8 @@ namespace TheSilentNet {
 		/// <returns>The number of rows inserted/updated affected by the query.</returns>
 		/// <param name="query">Query.</param>
 		/// <param name="args">Arguments.</param>
-		public int ExecNonQuery (string query, params KeyValuePair<string, object>[] args) {
-			return CreateCommand (query, args).ExecuteNonQuery ();
-		}
+		public int ExecNonQuery (string query, params KeyValuePair<string, object>[] args)
+            => CreateCommand (query, args).ExecuteNonQuery ();
 
 		/// <summary>
 		/// Executes a query.
@@ -155,9 +154,8 @@ namespace TheSilentNet {
 		/// <returns>The first column of the resultset (if present), null otherwise.</returns>
 		/// <param name="query">Query.</param>
 		/// <param name="args">Arguments.</param>
-		public object ExecScalar (string query, params KeyValuePair<string, object>[] args) {
-			return CreateCommand (query, args).ExecuteScalar ();
-		}
+		public object ExecScalar (string query, params KeyValuePair<string, object>[] args)
+            => CreateCommand (query, args).ExecuteScalar ();
 
 		/// <summary>
 		/// Executes a query.
@@ -165,9 +163,8 @@ namespace TheSilentNet {
 		/// <returns>An SQLiteDataReader that can be used to access the resultset.</returns>
 		/// <param name="query">Query.</param>
 		/// <param name="args">Arguments.</param>
-		public SQLiteDataReader ExecReader (string query, params KeyValuePair<string, object>[] args) {
-			return CreateCommand (query, args).ExecuteReader ();
-		}
+		public SQLiteDataReader ExecReader (string query, params KeyValuePair<string, object>[] args)
+            => CreateCommand (query, args).ExecuteReader ();
 
         #region IDisposable implementation
 
@@ -178,9 +175,7 @@ namespace TheSilentNet {
         /// <see cref="Dispose"/> method leaves the <see cref="TheSilentNet.Database"/> in an unusable state. After calling
         /// <see cref="Dispose"/>, you must release all references to the <see cref="TheSilentNet.Database"/> so the garbage
         /// collector can reclaim the memory that the <see cref="TheSilentNet.Database"/> was occupying.</remarks>
-        public void Dispose () {
-            Dispose (true);
-		}
+        public void Dispose () => Dispose (true);
 
         protected virtual void Dispose (bool dispose) {
             if (dispose) {
