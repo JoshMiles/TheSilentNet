@@ -5,7 +5,6 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using TheSilentNet;
 
 namespace TheSilentNet.TLN
 {
@@ -15,7 +14,7 @@ namespace TheSilentNet.TLN
         
         void Listeners()
         {
-            Database cIpc = Database.Instance();
+            var cIpc = Database.Instance();
             Socket sock = tcpListener.AcceptSocket();
             if (sock.Connected) {
                 Console.WriteLine ("SubNode {0} now connected to server.", sock.RemoteEndPoint);
