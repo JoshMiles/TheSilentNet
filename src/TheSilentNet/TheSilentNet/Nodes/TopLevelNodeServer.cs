@@ -55,12 +55,14 @@ namespace TheSilentNet {
 
         void Listen () {
             while (true) {
+
+                // Return if cancellation was requested.
                 if (tksource.IsCancellationRequested)
                     return;
+
                 var sock = listener.AcceptTcpClient ();
 
-                // TODO: Properly implement this
-                var node = new CipEntry ("NULL", CipNodeType.AccessNode);
+                var node = CipEntry.GenerateFor (sock.Client.RemoteEndPoint);
                 NodeConnected (node);
 
                 using (var reader = new StreamReader (sock.GetStream ()))

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 
 namespace TheSilentNet
 {
@@ -52,6 +53,16 @@ namespace TheSilentNet
 		/// <param name="rawtype">Raw Type.</param>
 		public CipEntry (string cip, int rawtype) : this (cip, (CipNodeType)rawtype) {
 		}
+
+        /// <summary>
+        /// Generates a CipEntry from a given <see cref="EndPoint"/> and <see cref="CipNodeType"/>.
+        /// </summary>
+        /// <param name="ep"></param>
+        /// <param name="type"></param>
+        public static CipEntry GenerateFor (EndPoint ep, CipNodeType type = CipNodeType.AccessNode) {
+            var cip = ep.ToString ();
+            return new CipEntry (cip, type);
+        }
 
 		/// <summary>
 		/// Returns a <see cref="System.String"/> that represents the current <see cref="TheSilentNet.CipEntry"/>.
