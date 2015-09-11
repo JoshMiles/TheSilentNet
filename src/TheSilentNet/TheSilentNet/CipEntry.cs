@@ -8,10 +8,23 @@ namespace TheSilentNet
 	/// </summary>
 	public class CipEntry
 	{
-		/// <summary>
-		/// The cIP.
-		/// </summary>
-		public readonly string Value;
+        /// <summary>
+        /// Shared WebClient.
+        /// </summary>
+        static readonly WebClient webclient;
+
+        /// <summary>
+        /// Static constructor.
+        /// </summary>
+        static CipEntry () {
+            webclient = new WebClient ();
+            webclient.Proxy = new WebProxy ();
+        }
+
+        /// <summary>
+        /// The cIP.
+        /// </summary>
+        public readonly string Value;
 
 		/// <summary>
 		/// The NodeType.
@@ -51,17 +64,17 @@ namespace TheSilentNet
 		/// </summary>
 		/// <param name="cip">cIP.</param>
 		/// <param name="rawtype">Raw Type.</param>
-		public CipEntry (string cip, int rawtype) : this (cip, (CipNodeType)rawtype) {
-		}
+		public CipEntry (string cip, int rawtype) : this (cip, (CipNodeType)rawtype) { }
 
         /// <summary>
         /// Generates a CipEntry from a given <see cref="EndPoint"/> and <see cref="CipNodeType"/>.
         /// </summary>
         /// <param name="ep"></param>
         /// <param name="type"></param>
-        public static CipEntry GenerateFor (EndPoint ep, CipNodeType type = CipNodeType.AccessNode) {
-            var cip = ep.ToString ();
-            return new CipEntry (cip, type);
+        public static CipEntry GenerateFor (IPEndPoint ep, CipNodeType type = CipNodeType.AccessNode) {
+            if (ep.Address == IPAddress.Any)
+                return new CipEntry (webclient.DownloadString ("http://icanhazip.com").Trim ('\r', '\n'), type);
+            return new CipEntry (ep.Address.ToString (), type);
         }
 
 		/// <summary>

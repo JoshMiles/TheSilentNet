@@ -57,6 +57,7 @@
     <Compile Include="Client.cs" />
     <Compile Include="Database\DatabaseLayout.cs" />
     <Compile Include="Database\SqliteNameReference.cs" />
+    <Compile Include="Nodes\NodeInformation.cs" />
     <Compile Include="Nodes\TopLevelNodeServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Chainable.cs" />
