@@ -10,7 +10,7 @@ namespace TheSilentNet
     /// Static import for max efficiency.
     /// </summary>
     public static class SqliteExtensions {
-        public static readonly SqliteNameReference
+        public static readonly string
             // Booleans
             ON = "ON",
             OFF = "OFF",
@@ -47,18 +47,8 @@ namespace TheSilentNet
         /// <param name="pragma"></param>
         /// <param name="value"></param>
         /// <param name="terminatestmt"></param>
-        public static Query Pragma (this Query query, string pragma, object value, bool terminatestmt = true)
-            => query.AppendFormat ("{0} PRAGMA {1} = {2}", terminatestmt ? ";" : string.Empty, pragma, value);
-
-        /// <summary>
-        /// PRAGMA statement.
-        /// </summary>
-        /// <param name="query"></param>
-        /// <param name="pragma"></param>
-        /// <param name="value"></param>
-        /// <param name="terminatestmt"></param>
-        public static Query Pragma (this Query query, SqliteNameReference pragma, SqliteNameReference value, bool terminatestmt = true)
-            => query.AppendFormat ("{0} PRAGMA {1} = {2};", terminatestmt ? ";" : string.Empty, pragma, value);
+        public static Query Pragma (this Query query, string pragma, object value)
+            => query.AppendFormat ("PRAGMA {0} = {1};", pragma, value);
 
         /// <summary>
         /// BEGIN statement.
@@ -182,7 +172,7 @@ namespace TheSilentNet
         /// <param name="tables"></param>
         public static Query Drop (this Query query, params string[] tables) {
             foreach (var table in tables)
-                query = query.AppendFormat ("DROP {0};", table);
+                query = query.AppendFormat ("DROP TABLE {0};", table);
             return query;
         }
 

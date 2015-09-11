@@ -9,22 +9,26 @@ namespace testcli
 		public static void Main (string[] args) {
 
 			// Get instance
-			var db = Database.Instance ();
+			var db = Database.Instance;
 
 			// Wipe db
 			db.Recreatedb ();
 
 			// Wrap test into transaction for efficiency
-			db.WrapFast (() => {
+			db.WrapTransaction (() => {
 				
 				// Create 1024 top level nodes
 				for (var i = 0; i < 1024; i++)
 					db.AddNode (new CipEntry (Guid.NewGuid ().ToString (), CipNodeType.TopLevelNode));
 				
-				// Create 4096 a nodes
-				for (var i = 0; i < 4096; i++)
+				// Create 1024 a nodes
+				for (var i = 0; i < 1024; i++)
 					db.AddNode (new CipEntry (Guid.NewGuid ().ToString (), CipNodeType.AccessNode));
-			});
+
+                // Create 1024 b nodes
+                for (var i = 0; i < 1024; i++)
+                    db.AddNode (new CipEntry (Guid.NewGuid ().ToString (), CipNodeType.BottomNode));
+            });
 
 			Console.WriteLine ("===\nDone.\n===");
 

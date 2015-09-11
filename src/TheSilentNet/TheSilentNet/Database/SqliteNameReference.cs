@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TheSilentNet {
     public class SqliteNameReference {
-        string value;
+        string value = string.Empty;
 
         public SqliteNameReference (string val) {
             value = val;

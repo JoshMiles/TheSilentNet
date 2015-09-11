@@ -10,7 +10,7 @@ namespace TheSilentNet {
     /// <summary>
     /// Database connector.
     /// </summary>
-    public class Database : Singleton<Database>, IDisposable {
+    public class Database : IDisposable {
         /// <summary>
         /// The SQLite data source.
         /// </summary>
@@ -21,46 +21,44 @@ namespace TheSilentNet {
         /// </summary>
         readonly SQLiteConnection con;
 
+        #region Singleton
+
+        static Database instance;
+        static object syncRoot = new object ();
+
+        /// <summary>
+        /// Singleton.
+        /// </summary>
+        public static Database Instance {
+            get {
+                if (instance == null)
+                    lock (syncRoot)
+                        if (instance == null)
+                            instance = new Database ();
+                return instance;
+            }
+        }
+
+        #endregion
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TheSilentNet.Database"/> class.
         /// </summary>
-        public Database () {
-
-            // Make sure that nobody directly instantiates this class.
-            // It must be instantiated from within the Instance () method.
-            Guard ();
+        Database () {
 
             // Create and open the connection.
             con = new SQLiteConnection {
                 ConnectionString = string.Format ("Data Source={0}", DATA_SOURCE)
-            }.OpenAndReturn ();
+            };
+            con.Open ();
 
             // Create the initial table layout.
             // This does nothing if the tables already exists.
-            Query.GrabNew ()
-                .Pragma (FOREIGN_KEYS, ON)
-                .Append (TABLE_LAYOUT)
-                .Exec ();
+            var query = Query.GrabNew ()
+                 .Pragma (FOREIGN_KEYS, ON)
+                 .Append (TABLE_LAYOUT);
+            ExecNonQuery (query);
         }
-
-        /// <summary>
-        /// Adds a node to the 'cips' table.
-        /// </summary>
-        /// <returns><c>true</c>, if the node was added, <c>false</c> otherwise.</returns>
-        /// <param name="cip">cIP.</param>
-        /// <param name="type">Type.</param>
-        public bool AddNode (string cip, CipNodeType type) {
-            var pcip = cip.ToSQLiteParam ("@cip");
-            var ptype = ((int)type).ToSQLiteParam ("@type");
-            return QUERY_INSERT_NODE.ExecNonQuery (pcip, ptype) > 0;
-        }
-
-        /// <summary>
-        /// Adds a node to the 'cips' table.
-        /// </summary>
-        /// <returns><c>true</c>, if the node was added, <c>false</c> otherwise.</returns>
-        /// <param name="cip">cIP entry.</param>
-        public bool AddNode (CipEntry cip) => AddNode (cip.Value, cip.Type);
 
         /// <summary>
 		/// Wraps a function call into a transaction.
@@ -100,6 +98,26 @@ namespace TheSilentNet {
             .ExecNonQuery () > 0;
 
         /// <summary>
+        /// Adds a node to the 'cips' table.
+        /// </summary>
+        /// <returns><c>true</c>, if the node was added, <c>false</c> otherwise.</returns>
+        /// <param name="cip">cIP.</param>
+        /// <param name="type">Type.</param>
+        public bool AddNode (string cip, CipNodeType type) {
+            var pcip = cip.ToSQLiteParam ("@cip");
+            var ptype = ((int)type).ToSQLiteParam ("@type");
+            return QUERY_INSERT_NODE.ExecNonQuery (pcip, ptype) > 0;
+        }
+
+        /// <summary>
+        /// Adds a node to the 'cips' table.
+        /// </summary>
+        /// <returns><c>true</c>, if the node was added, <c>false</c> otherwise.</returns>
+        /// <param name="cip">cIP entry.</param>
+        public bool AddNode (CipEntry cip)
+            => AddNode (cip.Value, cip.Type);
+
+        /// <summary>
         /// Gets a maximum of <paramref name="max"/> nodes from the 'cips' table.
         /// </summary>
         /// <returns>The nodes.</returns>
@@ -120,23 +138,8 @@ namespace TheSilentNet {
         /// </summary>
         /// <returns>The TLNs.</returns>
         /// <param name="max">Node limit.</param>
-        public IEnumerable<CipEntry> GetTopLevelNodes (int max = 1024) => GetNodes (max: 1024, tln: true);
-
-        /// <summary>
-        /// Creates an SQLite command.
-        /// </summary>
-        /// <returns>The command.</returns>
-        /// <param name="query">Query.</param>
-        /// <param name="args">Arguments.</param>
-        [SuppressMessage ("Microsoft.Security", "CA2100")]
-        public SQLiteCommand CreateCommand (string query, params KeyValuePair<string, object>[] args) {
-            var com = con.CreateCommand ();
-            com.CommandText = query;
-            foreach (var kvp in args)
-                com.Parameters.Add (new SQLiteParameter (kvp.Key, kvp.Value));
-            com.Prepare ();
-            return com;
-        }
+        public IEnumerable<CipEntry> GetTopLevelNodes (int max = 1024)
+            => GetNodes (max: 1024, tln: true);
 
         /// <summary>
         /// Executes a query.
@@ -164,6 +167,22 @@ namespace TheSilentNet {
         /// <param name="args">Arguments.</param>
         public SQLiteDataReader ExecReader (string query, params KeyValuePair<string, object>[] args)
             => CreateCommand (query, args).ExecuteReader ();
+
+        /// <summary>
+        /// Creates an SQLite command.
+        /// </summary>
+        /// <returns>The command.</returns>
+        /// <param name="query">Query.</param>
+        /// <param name="args">Arguments.</param>
+        [SuppressMessage ("Microsoft.Security", "CA2100")]
+        public SQLiteCommand CreateCommand (string query, params KeyValuePair<string, object>[] args) {
+            var com = con.CreateCommand ();
+            com.CommandText = query;
+            foreach (var kvp in args)
+                com.Parameters.Add (new SQLiteParameter (kvp.Key, kvp.Value));
+            com.Prepare ();
+            return com;
+        }
 
         #region IDisposable implementation
 

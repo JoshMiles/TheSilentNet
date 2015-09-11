@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Concurrent;
+using System.Linq;
 
 namespace TheSilentNet
 {
@@ -8,7 +9,8 @@ namespace TheSilentNet
 	/// Singleton.
 	/// </summary>
 	public static class Singleton {
-		public readonly static Dictionary<Type, object> Lookup = new Dictionary<Type, object> ();
+		public readonly static Dictionary<string, object> Lookup = new Dictionary<string, object> ();
+        public readonly static List<Type> List = new List<Type> ();
 		public static readonly object SyncRoot = new object ();
 	}
 
@@ -21,20 +23,21 @@ namespace TheSilentNet
 		/// Lazily creates and returns the instance.
 		/// </summary>
 		public static T Instance () {
-			if (!Singleton.Lookup.ContainsKey (typeof(T)))
+			if (!Singleton.List.Contains (typeof (T)))
 				lock (Singleton.SyncRoot)
-					if (!Singleton.Lookup.ContainsKey (typeof(T))) {
-						Singleton.Lookup.Add (typeof(T), null);
-						Singleton.Lookup [typeof(T)] = new T ();
-					}
-			return (T)Singleton.Lookup[typeof (T)];
+					if (!Singleton.List.Contains (typeof (T))) {
+                        Singleton.List.Add (typeof (T));
+						Singleton.Lookup.Add (typeof (T).ToString (), null);
+                        Singleton.Lookup[typeof (T).ToString ()] = new T ();
+                    }
+			return Singleton.Lookup[typeof (T).ToString ()] as T;
 		}
 
 		/// <summary>
 		/// Protects the constructor from being called directly.
 		/// </summary>
 		public static void Guard () {
-			if (!Singleton.Lookup.ContainsKey (typeof (T)))
+			if (!Singleton.List.Contains (typeof (T)))
 				throw new Exception ("You must instantiate this class using the Instance () method.");
 		}
 	}

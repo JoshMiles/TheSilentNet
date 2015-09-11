@@ -16,12 +16,12 @@ namespace TheSilentNet {
         }
 
         public Query Exec (params KeyValuePair<string, object>[] args) {
-            Database.Instance ().ExecNonQuery (value, args);
+            Database.Instance.ExecNonQuery (value, args);
             return this;
         }
 
         public Query Exec (SqliteExtensions.ExecFlags flags, params KeyValuePair<string, object>[] args) {
-            Database.Instance ().ExecNonQuery (value, args);
+            Database.Instance.ExecNonQuery (value, args);
             switch (flags) {
                 case SqliteExtensions.ExecFlags.PASS_QUERY:
                     return this;
@@ -42,7 +42,7 @@ namespace TheSilentNet {
         }
 
         public int ExecNonQuery (params KeyValuePair<string, object>[] args) {
-            return Database.Instance ().ExecNonQuery (value, args);
+            return Database.Instance.ExecNonQuery (value, args);
         }
 
         public Query Append (string query) {

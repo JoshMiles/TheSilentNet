@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TheSilentNet;
 using System.Net;
-using System.Net.Sockets;
 using System.Reflection;
+using System.Threading;
+using TheSilentNet;
 
 namespace snetTLN
 {
@@ -25,6 +21,11 @@ namespace snetTLN
             StatusAction ("TSN_LISTENER_CREATE", "Creating listener...", (()
                 => server = new TopLevelNodeServer (IPAddress.Any, 1998)), ErrorTolerance.Fail);
             StatusAction ("TSN_LISTENER_START", "Starting listener...", server.Start, ErrorTolerance.Fail);
+            Idle ();
+        }
+
+        static void Idle () {
+            Thread.Sleep (-1);
         }
 
         static void StatusAction (string task, string msg, Action act, ErrorTolerance tolerance = ErrorTolerance.Notify) {

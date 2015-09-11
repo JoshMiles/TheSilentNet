@@ -8,7 +8,7 @@ namespace TheSilentNet
 {
 	public class Client : Chainable<Client>
     {
-        readonly Database db = Database.Instance ();
+        readonly Database db = Database.Instance;
 		readonly CipEntry self;
 
 		public Client () : this (CipNodeType.AccessNode) { }
